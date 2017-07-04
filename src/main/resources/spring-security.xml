@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/security
+        http://www.springframework.org/schema/security/spring-security.xsd">
+	<http use-expressions="false">
+		<!-- 登录页面不需要做权限控制 -->
+		<intercept-url pattern="/login.jsp" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+
+		<!-- 访问其他所有页面都需要USER权限 -->
+		<intercept-url pattern="/**" access="ROLE_USER" />
+
+		<!-- 配置登录页面地址login-page、登录失败后的跳转地址authentication-failure-url -->
+		<form-login login-page="/login.jsp"
+			authentication-failure-url="/login.jsp?error" />
+
+		<!-- 登出功能 -->
+		<logout />
+	</http>
+
+	<authentication-manager>
+		<authentication-provider>
+			<user-service>
+				<!-- 创建两个用户，可以通过用户名密码登录 -->
+				<user name="admin" password="admin" authorities="ROLE_ADMIN" />
+				<user name="user" password="user" authorities="ROLE_USER" />
+				<user name="manager" password="manager" authorities="ROLE_USER,ROLE_ADMIN" />
+			</user-service>
+		</authentication-provider>
+	</authentication-manager>
+</beans:beans>
